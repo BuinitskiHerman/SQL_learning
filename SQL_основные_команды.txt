@@ -1,0 +1,314 @@
+=========================================
+БАЗЫ ДАННЫХ
+
+Просмотр доступных баз данных:
+SHOW DATABASES;
+
+Создание новой базы данных:
+CREATE DATABASE;
+
+Выбор базы данных для использования:
+USE <database_name>;
+
+Импорт SQL-команд из файла .sql:
+SOURCE <path_of_.sql_file>;
+ 
+Удаление базы данных:
+DROP DATABASE <database_name>;
+
+Просмотр таблиц, доступных в базе данных:
+SHOW TABLES;
+
+=========================================
+ТАБЛИЦЫ
+
+Создать новую таблицу с 3 колонками:
+CREATE TABLE table (
+	id INT PRIMARY KEY,
+	tableName VARCHAR NOT NULL,
+	tablePrice INT DEFAULT 0
+);
+
+Переименовать таблицу:
+ALTER TABLE table1 RENAME TO table2;
+
+Удалить таблицу из БД:
+DROP TABLE table;
+
+Удалить из таблицы все данные:
+TRUNCATE TABLE table;
+
+=========================================
+ИНДЕКСЫ
+
+Создание индекса из 2 полей таблицы:
+CREATE INDEX index_name
+ON table(column1, column2);
+
+Создание уникального индекса из 2 полей таблицы:
+CREATE UNIQUE INDEX index_name
+ON table(column1, column2);
+
+Удаление индекса:
+DROP INDEX index_name;
+
+=========================================
+ТРИГГЕРЫ
+
+Создание/изменение триггера:
+CREATE OR MODIFY TRIGGER trigger_name
+BEFORE|AFTER INSERT|UPDATE|DELETE
+ON table_name FOR EACH ROW
+EXECUTE stored_procedure;
+
+Удаление триггера:
+DROP TRIGGER trigger_name;
+
+=========================================
+ПОЛЯ
+
+Добавить новое поле в таблицу:
+ALTER TABLE table ADD column_name;
+
+Переименовать поле:
+ALTER TABLE table RENAME column1 TO column2;
+
+Удалить поле из таблицы:
+ALTER TABLE table DROP COLUMN column_name;
+
+=========================================
+ЗАПИСИ
+
+Добавление одной записи:
+INSERT INTO table (column1, column2)
+VALUES (value1, value2);
+
+Добавление нескольких записей:
+INSERT INTO table (column1, column2)
+VALUES (value11, value12),
+	(value21, value22),
+	(value31, value32);
+
+Добавление записей из другой таблицы:
+INSERT INTO table1 (column1, column2)
+SELECT (col1, col2) FROM table2;
+
+Обновление поля во всех записях:
+UPDATE table1
+SET column1 = new_value;
+
+Обновление поля во всех записях, соответствующих условию:
+UPDATE table1
+SET column1 = new_value
+	column2 = new_value
+WHERE condition;
+
+Удаление всех записей:
+DELETE FROM table;
+
+Удаление записей, соответствующих условию:
+DELETE FROM table
+WHERE condition;
+
+=========================================
+ОГРАНИЧЕНИЯ
+
+Добавить ограничение целостности:
+ALTER TABLE table ADD constraint;
+
+Удалить ограничение целостности:
+ALTER TABLE table DROP constaint;
+
+Первичный ключ из комбинации полей:
+CREATE TABLE table (
+	column1 INT,
+	column2 INT,
+	column3 VARCHAR,
+	PRIMARY KEY (column1, column2)
+);
+
+Внешний ключ:
+CREATE TABLE table (
+	column1 INT PRIMARY KEY,
+	column2 INT,
+	FOREIGN KEY (column2 REFERENCES table2(column1))
+);
+
+Ограничение уникальности:
+CREATE TABLE table (
+	column1 INT,
+	column2 INT,
+	UNIQUE(column1, column2)
+);
+
+Проверка значения полей:
+CREATE TABLE table (
+	column1 INT,
+	column2 INT,
+	CHECK(column1 > 0 AND
+	column1 >= column2)
+);
+
+Поле не может быть пустым:
+CREATE TABLE table (
+	column1 INT PRIMARY KEY,
+	column2 VARCHAR NOT NULL,
+);
+
+=========================================
+ВЫБОРКА ДАННЫХ
+
+Значения двух полей из всех записей:
+SELECT column1, column2 FROM table;
+
+Значения всех полей из всех записей:
+SELECT * FROM table;
+
+Только уникальные значения:
+SELECT DISTINCT column1 FROM table;
+
+Сортировка по возрастанию:
+SELECT * FROM table
+ORDER BY column1 ASC;
+
+Сортировка по убыванию:
+SELECT * FROM table
+ORDER BY column1 DESC;
+
+Пропустить offset записей и вывести n записей:
+SELECT * FROM table
+ORDER BY column1
+LIMIT n OFFSET offset;
+
+=========================================
+УСЛОВИЯ
+
+Записи, соответствующие условию:
+SELECT column1 FROM table
+WHERE condition;
+
+Отбор по шаблону (Оператор LIKE используется в WHERE, 
+чтобы задать шаблон поиска похожего значения):
+SELECT column1 FROM table
+WHERE column2 [NOT] LIKE pattern;
+
+Отбор по списку:
+SELECT column1 FROM table
+WHERE column2 [NOT] IN (value1, value2);
+
+Отбор по диапазону:
+SELECT column1 FROM table
+WHERE column2 BETWEEN low AND high;
+
+Отбор пустых/непустых значений:
+SELECT column1 FROM table
+WHERE column2 IS [NOT] NULL;
+
+=========================================
+АГРЕГАТНЫЕ ФУНКЦИИ
+
+Общее количество записей:
+SELECT COUNT(*) FROM table;
+
+Максимальное значение поля column1:
+SELECT MAX(column1) FROM table;
+
+Минимальное значение поля column1:
+SELECT MIN(column1) FROM table;
+
+Среднее значение поля column1:
+SELECT AVG(column1) FROM table;
+
+Группировка с использованием агрегатных функций:
+SELECT column1, aggregate(column2)
+FROM table
+GROUP BY column1;
+
+Фильтрация групп:
+SELECT column1, aggregate(column2)
+FROM table
+GROUP BY column1
+HAVING condition;
+
+=========================================
+КОМБИНАЦИИ ВЫБОРОК
+
+Объединение выборок:
+SELECT column1, column2 FROM table1
+UNION [ALL]
+SELECT column1, column2 FROM table2;
+
+Пересечение выборок:
+SELECT column1, column2 FROM table1
+INTERSECT
+SELECT column1, column2 FROM table2;
+
+Вычитание выборок:
+SELECT column1, column2 FROM table1
+MINUS
+SELECT column1, column2 FROM table2;
+
+=========================================
+СОЕДИНЕНИЕ ТАБЛИЦ
+
+Внутреннее соединение:
+SELECT t1.column1, t2.column2
+FROM table1 t1
+INNER JOIN table2 t2 ON condition;
+
+Внешнее левое соединение:
+SELECT t1.column1, t2.column2
+FROM table1 t1
+LEFT JOIN table2 t2 ON condition;
+
+Внешнее правое соединение:
+SELECT t1.column1, t2.column2
+FROM table1 t1
+RIGHT JOIN table2 t2 ON condition;
+
+Полное соединение:
+SELECT t1.column1, t2.column2
+FROM table1 t1
+FULL OUTER JOIN table2 t2 ON condition;
+
+Декартово произведение рядов:
+SELECT t1.column1, t2.column2
+FROM table1 t1
+CROSS JOIN table2 t2;
+
+Декартово произведение рядов:
+SELECT t1.column1, t2.column2
+FROM table1 t1, table2 t2;
+
+Автосоединение таблицы table1:
+SELECT t1.column1, mirror.column2
+FROM table1 t1
+INNER JOIN table1 mirror ON condition;
+
+=========================================
+ПРЕДСТАВЛЕНИЯ
+
+Представление, содержащее 2 поля таблицы table:
+CREATE VIEW view_name(column1, column2) AS
+SELECT column1, column2
+FROM table;
+
+Проверка для изменяемых представлений:
+Представление, содержащее 2 поля таблицы table:
+CREATE VIEW view_name(column1, column2) AS
+SELECT column1, column2
+FROM table WITH [CASCADED|LOCAL] CHECK OPTION;
+
+Рекурсивное представление:
+CREATE RECURSIVE VIEW view_name AS
+select-statement
+UNION [ALL]
+select-statement;
+
+Временное представление:
+CREATE TEMPORARY VIEW view_name AS
+SELECT column1, column2
+FROM table;
+
+Удаление представления:
+DROP VIEW view_name;
